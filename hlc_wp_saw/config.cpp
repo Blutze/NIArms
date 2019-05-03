@@ -13,7 +13,7 @@ class CfgPatches {
         author="toadie";
     };
 };
-
+//meaningless change
 class cfgMods {
     class Mod_Base;
     class Niarms_SAW : Mod_Base {
