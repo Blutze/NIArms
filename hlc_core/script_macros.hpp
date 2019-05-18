@@ -37,6 +37,141 @@
         };\
     }
 
+
+// Required imports:
+// class CfgWeapons {
+    // class muzzle_snds_H;
+    // class muzzle_snds_M : muzzle_snds_H {
+        // class ItemInfo;
+    // };
+// };
+
+// Additional required import for flash splitter:
+// class CfgWeapons {
+    // class ItemCore;
+// };
+
+// Full sound suppressor
+// Full sound/visibility/ballistics changes, inherited from Vanilla, potentially changed by ACE
+// Weight is a parameter; standard is 12 mass for full power cartridges, 8 mass for intermediate, 6 for pistol
+// Full 0.2 inertia
+#define __HLC_MUZZLE_SOUNDCAN(className,deeelc,deename,theman,strDescriptionShort,imageFile,modelFile,numMass)    class ##className : muzzle_snds_M {\
+    dlc = ##deeelc;\
+    scope = 2;\
+    scopeCurator = 2;\
+    displayName = ##deename;\
+    author = ##theman;\
+    descriptionShort = ##strDescriptionShort;\
+    picture = ##imageFile;\
+    model = ##modelFile;\
+    class ItemInfo : ItemInfo {\
+        mass = ##numMass;\
+    };\
+    inertia = 0.2;\
+}
+
+// Canned flash suppressor
+// Almost full visibility changes
+// Very minor sound changes
+// Static weight, half of intermediate cartridge sound suppressor standard
+// Half the inertia of a sound suppressor
+// No ballistics changes
+#define __HLC_MUZZLE_FLASHCAN(className,deeelc,deename,theman,strDescriptionShort,imageFile,modelFile)    class ##className : muzzle_snds_M {\
+    dlc = ##deeelc;\
+    scope = 2;\
+    scopeCurator = 2;\
+    displayName = ##deename;\
+    author = ##theman;\
+    descriptionShort = ##strDescriptionShort;\
+    picture = ##imageFile;\
+    model = ##modelFile;\
+    class ItemInfo : ItemInfo {\
+        mass = 4;\
+        soundTypeIndex = 0;\
+        class MagazineCoef {\
+            initSpeed = 1.0;\
+        };\
+        class AmmoCoef {\
+            hit = 1.0;\
+            visibleFire = 0.55;\
+            audibleFire = 0.95;\
+            visibleFireTime = 0.55;\
+            audibleFireTime = 0.95;\
+            cost = 1.0;\
+            typicalSpeed = 1.0;\
+            airFriction = 1.0;\
+        };\
+        class MuzzleCoef {\
+            dispersionCoef = "0.95f";\
+            artilleryDispersionCoef = "1.0f";\
+            fireLightCoef = "0.55f";\
+            recoilCoef = "0.95f";\
+            recoilProneCoef = "0.95f";\
+            minRangeCoef = "1.0f";\
+            minRangeProbabCoef = "1.0f";\
+            midRangeCoef = "1.0f";\
+            midRangeProbabCoef = "1.0f";\
+            maxRangeCoef = "1.0f";\
+            maxRangeProbabCoef = "1.0f";\
+        };\
+    };\
+    inertia = 0.1;\
+}
+
+// Basic multiport flash hider or compensator
+// Really only cosmetic changes to model & flash
+// No sound change
+// ~45 grams heavier than whatever is standard on the weapon
+// No inertia penalty
+// Very minor visibility change
+#define __HLC_MUZZLE_SPLITTER(className,deeelc,deename,theman,strDescriptionShort,imageFile,modelFile,classNameFlash,flashFile)    class ##classNameFlash : ItemCore {\
+    scope = 2;\
+    model = ##flashFile;\
+};\
+class ##className : muzzle_snds_M {\
+    dlc = ##deeelc;\
+    scope = 2;\
+    scopeCurator = 2;\
+    displayName = ##deename;\
+    author = ##theman;\
+    descriptionShort = ##strDescriptionShort;\
+    picture = ##imageFile;\
+    model = ##modelFile;\
+    class ItemInfo : ItemInfo {\
+        mass = 1;\
+        soundTypeIndex = 0;\
+        muzzleEnd = "zaslehpoint";\
+        alternativeFire = ##classNameFlash;\
+        class MagazineCoef {\
+            initSpeed = 1.0;\
+        };\
+        class AmmoCoef {\
+            hit = 1.0;\
+            visibleFire = 0.95;\
+            audibleFire = 1;\
+            visibleFireTime = 0.95;\
+            audibleFireTime = 1;\
+            cost = 1.0;\
+            typicalSpeed = 1.0;\
+            airFriction = 1.0;\
+        };\
+        class MuzzleCoef {\
+            dispersionCoef = "1.0f";\
+            artilleryDispersionCoef = "1.0f";\
+            fireLightCoef = "0.95f";\
+            recoilCoef = "0.95f";\
+            recoilProneCoef = "0.95f";\
+            minRangeCoef = "1.0f";\
+            minRangeProbabCoef = "1.0f";\
+            midRangeCoef = "1.0f";\
+            midRangeProbabCoef = "1.0f";\
+            maxRangeCoef = "1.0f";\
+            maxRangeProbabCoef = "1.0f";\
+        };\
+    };\
+    inertia = 0;\
+}
+
 #define __556STANAG_MAGS "hlc_30rnd_556x45_EPR", "hlc_30rnd_556x45_SOST", "hlc_30rnd_556x45_SPR", "hlc_30rnd_556x45_MDim", "hlc_30rnd_556x45_TDim", "hlc_50rnd_556x45_EPR", "hlc_30rnd_556x45_S","hlc_30rnd_556x45_M"
 #define __556STANAG_BI_MAGS "30Rnd_556x45_Stanag", "30Rnd_556x45_Stanag_Tracer_Red", "30Rnd_556x45_Stanag_Tracer_Green", "30Rnd_556x45_Stanag_Tracer_Yellow", "30Rnd_556x45_Stanag_green", "30Rnd_556x45_Stanag_red"
 #define __556STANAG_RHS_MAGS "rhs_mag_30Rnd_556x45_Mk318_Stanag", "rhs_mag_30Rnd_556x45_Mk262_Stanag", "rhs_mag_30Rnd_556x45_M855A1_Stanag", "rhs_mag_30Rnd_556x45_M855A1_Stanag_No_Tracer", "rhs_mag_30Rnd_556x45_M855A1_Stanag_Tracer_Red", "rhs_mag_30Rnd_556x45_M855A1_Stanag_Tracer_Green", "rhs_mag_30Rnd_556x45_M855A1_Stanag_Tracer_Yellow", "rhs_mag_30Rnd_556x45_M855A1_Stanag_Tracer_Orange", "rhs_mag_30Rnd_556x45_M200_Stanag", "rhs_mag_30Rnd_556x45_M855_Stanag", "rhs_mag_30Rnd_556x45_M855_Stanag_Tracer_Red", "rhs_mag_30Rnd_556x45_M855_Stanag_Tracer_Green", "rhs_mag_30Rnd_556x45_M855_Stanag_Tracer_Yellow", "rhs_mag_30Rnd_556x45_M855_Stanag_Tracer_Orange"
